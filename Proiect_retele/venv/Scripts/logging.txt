@@ -1,0 +1,19 @@
+[Info] Comunication started
+[Info] am starea 1
+[Info] am trimis mesajul type: 1
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] am starea 2
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] am starea 3
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] am starea 4
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] am starea 5
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] am starea 6
+[Info] Comunicatie terminata

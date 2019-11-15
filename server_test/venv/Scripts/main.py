@@ -13,7 +13,7 @@ while True:
     if(bytesAddressPair!=0):
         message = bytesAddressPair[0]
         address = bytesAddressPair[1]
-        if(message.decode().__contains__('"type": "1"')):
+        if(message.decode().__contains__("type: 1")):
             print("Am primit mesajul: ", message.decode())
             print("de la adresa: ", address)
             sock2.sendto(mesaj.encode(),address)
