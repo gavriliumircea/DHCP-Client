@@ -1,9 +1,40 @@
 [Info] Comunication started
 [Info] am starea 1
-[Info] am trimis mesajul type: 1
+[Info] am trimis mesajul de tipul 1
 [Info] Comunicatie terminata
 [Info] Comunication started
-[Info] am starea 2
+[Info] Comunication started
+[Info] am starea 1
+[Info] am trimis mesajul de tipul 1
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] Comunication started
+[Info] am starea 1
+[Info] am trimis mesajul de tipul 1
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] Comunication started
+[Info] am starea 1
+[Info] am trimis mesajul de tipul 1
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] Comunication started
+[Info] am starea 1
+[Info] am trimis mesajul de tipul 1
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] Comunication started
+[Info] am starea 1
+[Info] am trimis mesajul de tipul 1
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] Comunication started
+[Info] am starea 1
+[Info] am trimis mesajul de tipul 1
+[Info] Comunicatie terminata
+[Info] Comunication started
 [Info] Comunicatie terminata
 [Info] Comunication started
 [Info] am starea 3
@@ -17,3 +48,70 @@
 [Info] Comunication started
 [Info] am starea 6
 [Info] Comunicatie terminata
+[Info] Comunication started
+[Info] am starea 1
+[Info] am trimis mesajul de tipul 1
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] Comunication started
+[Info] am starea 1
+[Info] am trimis mesajul de tipul 1
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] Comunication started
+[Info] am starea 1
+[Info] am trimis mesajul de tipul 1
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] Comunication started
+[Info] am starea 1
+[Info] am trimis mesajul de tipul 1
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] Comunication started
+[Info] am starea 1
+[Info] Comunication started
+[Info] am starea 1
+[Info] am trimis mesajul de tipul 1
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] am starea 3
+[Info] Comunication started
+[Info] am starea 1
+[Info] am trimis mesajul de tipul 1
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] am starea 3
+[Info] Comunication started
+[Info] am starea 1
+[Info] am trimis mesajul de tipul 1
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] am starea 3
+[Info] Comunication started
+[Info] am starea 1
+[Info] am trimis mesajul de tipul 1
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] Comunicatie terminata
+[Info] Comunication started
+[Info] am starea 3
+[Info] Comunication started
+[Info] am starea 1
+[Info] am trimis mesajul de tipul 1
+[Info] Comunicatie terminata
+[Info] Comunication started
