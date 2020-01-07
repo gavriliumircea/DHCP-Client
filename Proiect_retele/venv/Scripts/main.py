@@ -1,11 +1,11 @@
-import socket;
+import socket
 
 message_size=int(225)
 
 Client_States_Dictionary={1:"initial",2:"waiting for DHCPOFFER",3:"sending DHCP request", 4:"Waiting for DHCPACK", 5:"Complete", 6:"Realese IP address",7:"closed"}
 
 class DHCP_Client:
-    STATE=1;
+    STATE=1
     IP_ADDRESS="127.0.0.1"
     UDP_PORT=68
 
@@ -13,11 +13,11 @@ class Logger:
     def __init__(self):
         self.f = open("logging.txt", "a+")
     def writeInfo(self, text):
-        txt="[Info] "+str(text)+"\n";
+        txt="[Info] "+str(text)+"\n"
         self.f.write(txt)
 
     def writeError(self, text):
-        txt = "[Error] " + str(text)+"\n";
+        txt = "[Error] " + str(text)+"\n"
         self.f.write(txt)
 
     def endCommunication(self):
@@ -36,10 +36,10 @@ Messages_dictionary={
 
 def message_factory(type):
     message=bytearray(message_size)
-    message[0]=1;
-    message[1]=1;
-    message[2]=6;
-    message[224]=type;
+    message[0]=1
+    message[1]=1
+    message[2]=6
+    message[224]=type
     return message
 
 def check_message(message, state):
@@ -56,7 +56,7 @@ def check_message(message, state):
 
 
 logger=Logger()
-UDP_PORT_TO_TRANSMIT = 67;
+UDP_PORT_TO_TRANSMIT = 67
 MESSAGE = "type: 1"
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.setsockopt(socket.SOL_SOCKET,socket.SO_BROADCAST,1)
