@@ -1,5 +1,6 @@
 import tkinter as tk
 from main import *
+import threading
 
 class Application(tk.Frame):
     def __init__(self, master=None):
@@ -19,23 +20,42 @@ class Application(tk.Frame):
         self.quit.place(x=201, y=50)
 
         self.var1 = tk.IntVar()
-        self.chk1=tk.Checkbutton(self.master, text="option 1", variable=self.var1)
+        self.chk1=tk.Checkbutton(self.master, text="Optiunea 53: DHCP message: DHCPDISCOVER", variable=self.var1)
+        self.var1.set(1)
         self.var2 = tk.IntVar()
-        self.chk2=tk.Checkbutton(self.master, text="option 2", variable=self.var2)
+        self.chk2=tk.Checkbutton(self.master, text="Optiunea 50: Requested IP Address", variable=self.var2)
+
+        self.var3 = tk.IntVar()
+        self.chk3 = tk.Checkbutton(self.master, text="Optiunea 53: DHCP message: DHCPDISCOVER", variable=self.var3)
+        self.var4 = tk.IntVar()
+        self.chk4 = tk.Checkbutton(self.master, text="Optiunea 53: DHCP message: DHCPDISCOVER", variable=self.var4)
+        self.var5 = tk.IntVar()
+        self.chk5 = tk.Checkbutton(self.master, text="Optiunea 53: DHCP message: DHCPDISCOVER", variable=self.var4)
+
         self.chk1.pack()
         self.chk2.pack()
 
     def destroy(self):
         #oprire comunicatie
+        print("seek and destroy")
         self.client.STATE=7
         self.master.destroy
         exit(0)
 
     def start(self):
         print("Sending message")
-        print(self.var1.get(),self.var2.get())
-        comm(self.client)
+        if(self.var1.get()==0):
+            Logger().writeError("Eroare optiune 53")
+            self.destroy()
+        self.mess=Message(self.var1.get())
+        try:
+            thread = threading.Thread(target=comm, args=(self.client, self.mess))
+            thread.start()
+            thread.join()
+        except:
+            Logger().writeError("Eroare thread")
         self.destroy()
+
 
 root = tk.Tk()
 app = Application(master=root)
