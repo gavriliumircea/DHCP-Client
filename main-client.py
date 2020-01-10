@@ -1,7 +1,6 @@
 import socket
 import random
 
-message_size = 250
 
 Client_States_Dictionary = {1: "initial", 2: "waiting for DHCPOFFER", 3: "sending DHCP request",
                             4: "Waiting for DHCPACK", 5: "Complete", 6: "Release IP address", 7: "closed"}
@@ -42,12 +41,15 @@ class Logger:
         self.f.close()
 
 class Message:
-    def __init__(self,type):
-        self.message = bytearray(message_size)
+    def __init__(self,type,options):
+        self.message = bytearray(240)
         self.type=type
         self.op=1
-        self.XID=random.sample(range(0,255),4)
+        # self.XID=random.sample(range(0,255),4)
+        self.XID=bytearray([0x18,0x16,0x14,0x22])
+        self.options = options
         self.message_factory()
+
 
 
     def setFlag(self,type):
@@ -57,14 +59,14 @@ class Message:
             return 0
 
     def message_factory(self):
-        self.message = bytearray(message_size)
+        self.message = bytearray(240)
         self.message[0] = self.op
         self.message[1] = 1
         self.message[2] = 6
         self.message[3] = 0
         self.message[4:8] = self.XID
         # message[8:10]                           # secs seconds elapsed since a client began an attempt to acquire or renew a lease.
-        self.message[10] = self.setFlag(type)     # 128 for broadcast and 0 in rest
+        self.message[10] = self.setFlag(self.type)     # 128 for broadcast and 0 in rest
         self.message[11] = 0                      # reserved
         self.message[12:16] = [0]*4               # CIAdrr client ip address used ONLY if the client has a valid ip address
         self.message[16:20] = [0]*4               # YIAdrr ip address the server is assigning to the client
@@ -78,22 +80,27 @@ class Message:
         # options
 
         self.message[236:240]=[99,130,83,99] #magic cookie
-        self.message[240:243] = [53, 1, self.type] #optiunea 53, len 1, data 1-8
-        # 50 4 req ip address
-        self.message[243:249]=[50,4,192,14,0,3]
-        # 51 4 req lease time
-        # 54 4 server identifier
-
-        self.message[message_size-1] = 255
-        self.message.append()
+        self.message +=bytearray( [53, 1, self.type])
+        self.message+=self.options
+         #optiunea 53, len 1, data 1-8
+        # # 50 4 req ip address
+        # self.message[243:249]=[50,4,192,14,0,3]
+        # # 51 4 req lease time
+        # # 54 4 server identifier
+        #
+        # self.message[message_size-1] = 255
+        # self.message.append()
 
 
     @staticmethod
     def check_message(message,state):
+        if len(message)<243:
+            return False
         if message[0] == 2:
             return True
-        elif message[message_size - 1] == state:
+        elif message[249] == state:
             return True
+        len(message)
         return False
 
 
