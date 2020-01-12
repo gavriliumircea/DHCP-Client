@@ -3,6 +3,7 @@ import random
 import tkinter as tk
 
 
+var=1
 Client_States_Dictionary = {1: "initial", 2: "waiting for DHCPOFFER", 3: "sending DHCP request",
                             4: "Waiting for DHCPACK", 5: "Complete", 6: "Release IP address", 7: "closed"}
 
@@ -120,11 +121,9 @@ class Message:
     def check_message(message,state,options):
         if len(message)<243:
             return False
-        if message[0] == 2:
+        if message[0] == 2 and options[53]==state:
             return True
-        elif options[53]==state:
-            return True
-        len(message)
+
         return False
 
 
@@ -199,17 +198,25 @@ def comm(client,mess,widget):
             print("sunt in starea " + str(client.STATE))
             response = sock.recvfrom(bufferSize)
             serverOptions = unpack(response[0])
-            if Message.check_message(response[0],client.STATE,serverOptions) is True:
+            if Message.check_message(response[0],5,serverOptions) is True:
                 print("am primit mesajul de tipul " + str(client.STATE))
                 client.updateInfo(serverOptions,response[0])
                 print("ip address "+str(client.IP_ADDRESS))
                 print(client.mask)
-            client.STATE=5
-
+                print(client.previousIPDictionary)
+                print(client.serverIP)
+                client.STATE=5
+            elif Message.check_message(response[0],6,serverOptions) is True:
+                print("am primit mesajul de tipul nack")
+                client.STATE=3
         elif client.STATE == 5:
+
             logger.writeInfo("set up complete waiting for user to release and close " )
-        elif client.STATE == 7:
-            logger.writeInfo("am starea " + str(client.STATE))
+            client.STATE=7
+            mess.type = client.STATE
+            mess.message_factory()
+            sock.sendto(mess.message, ('<broadcast>', UDP_PORT_TO_TRANSMIT))
+
     logger.writeInfo("Comunicatie terminata")
     print("am iesit din while")
     logger.endCommunication()

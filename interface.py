@@ -1,6 +1,7 @@
 import tkinter as tk
-from main import *
+import main as m
 import threading
+
 
 
 class Application(tk.Frame):
@@ -10,7 +11,7 @@ class Application(tk.Frame):
         tk.Frame.__init__(self, master)
         self.pack()
         self.master.title("DHCP Client")
-        self.client = DHCP_Client()
+        self.client = m.DHCP_Client()
         self.create_widgets()
 
     def create_widgets(self):
@@ -57,6 +58,8 @@ class Application(tk.Frame):
         self.text.pack()
 
     def release(self):
+        print(m.var)
+        m.var=7
         self.client.STATE=7
 
     def destroy(self):
@@ -95,17 +98,17 @@ class Application(tk.Frame):
     def start(self):
         print("Sending message")
         if (self.var1.get() == 0):
-            Logger().writeError("Eroare optiune 53")
+            m.Logger().writeError("Eroare optiune 53")
             self.destroy()
-        self.mess = Message(1, self.optionBuilder())
+        self.mess = m.Message(1, self.optionBuilder())
         try:
-            thread = threading.Thread(target=comm, args=(self.client, self.mess,self.text))
+            thread2 = threading.Thread(target=m.comm, args=(self.client, self.mess,self.text))
             # thread2 = threading.Thread(target=self.release)
-            thread.start()
+            thread2.start()
             # thread2.start()
-            thread.join()
+            thread2.join()
         except:
-            Logger().writeError("Eroare thread")
+            m.Logger().writeError("Eroare thread")
         # comm(self.client,self.mess)
         self.destroy()
 
@@ -113,3 +116,4 @@ class Application(tk.Frame):
 root = tk.Tk()
 app = Application(master=root)
 app.mainloop()
+
