@@ -1,6 +1,7 @@
 import socket
 import random
 import tkinter as tk
+import time
 
 
 var=1
@@ -166,19 +167,23 @@ def comm(client,mess,widget):
             logger.writeInfo("Comunication started")
             logger.writeInfo("am starea " + str(client.STATE))
             print("am trimis discover")
-            # widget.insert(tk.INSERT,"am trimis discover")
-            # widget.update_idletasks()
+            widget.insert(tk.INSERT,"am trimis discover")
+            widget.update_idletasks()
             sock.sendto(mess.message, ('<broadcast>', UDP_PORT_TO_TRANSMIT))
             # logger.writeInfo("am trimis mesajul de tipul " + str(Messages_dictionary[client.STATE]))
             client.STATE = 2
 
         elif client.STATE == 2:
             print("asteptam")
+            widget.insert(tk.INSERT, "\nasteptam")
+            widget.update_idletasks()
             response = sock.recvfrom(bufferSize)
             # print(Message.check_message(response[0],client.STATE))
             serverOptions=unpack(response[0])
             if Message.check_message(response[0],client.STATE,serverOptions) is True:
                 print("am primit mesajul de tipul " + str(client.STATE))
+                widget.insert(tk.INSERT, "\nam primit mesajul de tipul " + str(client.STATE))
+                widget.update_idletasks()
                 if 54 in serverOptions:
                     client.serverIP=serverOptions[54]
                     if client.serverIP in client.previousIPDictionary:
@@ -187,6 +192,8 @@ def comm(client,mess,widget):
 
         elif client.STATE == 3:
             print("sunt in starea " + str(client.STATE))
+            widget.insert(tk.INSERT, "\nsunt in starea " + str(client.STATE))
+            widget.update_idletasks()
             logger.writeInfo("am starea " + str(client.STATE))
             mess.type=client.STATE
             mess.message_factory()
@@ -195,6 +202,8 @@ def comm(client,mess,widget):
 
         elif client.STATE == 4:
             logger.writeInfo("am starea "+str(client.STATE))
+            widget.insert(tk.INSERT, "\nam starea "+str(client.STATE))
+            widget.update_idletasks()
             print("sunt in starea " + str(client.STATE))
             response = sock.recvfrom(bufferSize)
             serverOptions = unpack(response[0])
@@ -205,19 +214,34 @@ def comm(client,mess,widget):
                 print(client.mask)
                 print(client.previousIPDictionary)
                 print(client.serverIP)
+                widget.insert(tk.INSERT, "\nam primit mesajul de tipul " + str(client.STATE))
+                widget.insert(tk.INSERT, "\nip address: " + str(client.IP_ADDRESS))
+                widget.insert(tk.INSERT, "\nmask: " + client.mask)
+                widget.insert(tk.INSERT, "\npreviousIPDictionary: " + str(client.previousIPDictionary))
+                widget.insert(tk.INSERT, "\nserver IP: " + client.serverIP)
+                widget.update_idletasks()
                 client.STATE=5
             elif Message.check_message(response[0],6,serverOptions) is True:
                 print("am primit mesajul de tipul nack")
+                widget.insert(tk.INSERT, "\nam primit mesajul de tipul nack")
+                widget.update_idletasks()
                 client.STATE=3
         elif client.STATE == 5:
 
             logger.writeInfo("set up complete waiting for user to release and close " )
+
+        elif client.STATE == 6:
+            logger.writeInfo("sending release " )
+            widget.insert(tk.INSERT, "\nsending release ")
+            widget.update_idletasks()
+            print("sending release ")
             client.STATE=7
             mess.type = client.STATE
             mess.message_factory()
             sock.sendto(mess.message, ('<broadcast>', UDP_PORT_TO_TRANSMIT))
-
     logger.writeInfo("Comunicatie terminata")
+    widget.insert(tk.INSERT, "\nComunicatie terminata")
+    widget.update_idletasks()
     print("am iesit din while")
     logger.endCommunication()
     sock.close()
