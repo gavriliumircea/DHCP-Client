@@ -58,9 +58,8 @@ class Application(tk.Frame):
         self.text.pack()
 
     def release(self):
-        print(m.var)
-        m.var=7
-        self.client.STATE=7
+
+        self.client.STATE=6
 
     def destroy(self):
         # oprire comunicatie
@@ -106,11 +105,11 @@ class Application(tk.Frame):
             # thread2 = threading.Thread(target=self.release)
             thread2.start()
             # thread2.start()
-            thread2.join()
+            # thread2.join()
         except:
             m.Logger().writeError("Eroare thread")
         # comm(self.client,self.mess)
-        self.destroy()
+        # self.destroy()
 
 
 root = tk.Tk()
