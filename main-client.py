@@ -1,5 +1,6 @@
 import socket
 import random
+import tkinter as tk
 
 
 Client_States_Dictionary = {1: "initial", 2: "waiting for DHCPOFFER", 3: "sending DHCP request",
@@ -20,8 +21,31 @@ Messages_dictionary = {
 class DHCP_Client:
     def __init__(self):
         self.STATE = 1
-        self.IP_ADDRESS = "127.0.0.1"
+        self.IP_ADDRESS = [127,0,0,1]
+        self.IP_ADDRESS_TO_REQUEST = [127, 0, 0, 1]
         self.UDP_PORT = 68
+        self.previousIPDictionary={}
+        self.serverIP=""
+        self.dns=""
+        self.mask=""
+        self.router=""
+
+    def ipToString(self):
+        formated=str(self.IP_ADDRESS[0])+"."+str(self.IP_ADDRESS[1])+"."+str(self.IP_ADDRESS[2])+"."+str(self.IP_ADDRESS[3])
+        return formated
+
+    def updateInfo(self,options,message):
+        self.IP_ADDRESS[0]=message[16]
+        self.IP_ADDRESS[1] = message[17]
+        self.IP_ADDRESS[2] = message[18]
+        self.IP_ADDRESS[3] = message[19]
+        self.previousIPDictionary[self.serverIP]=self.IP_ADDRESS
+        if 1 in options:
+            self.mask=options[1]
+        if 6 in options:
+            self.dns=options[6]
+        if 3 in options:
+            self.router=options[3]
 
 
 class Logger:
@@ -93,24 +117,49 @@ class Message:
 
 
     @staticmethod
-    def check_message(message,state):
+    def check_message(message,state,options):
         if len(message)<243:
             return False
         if message[0] == 2:
             return True
-        elif message[249] == state:
+        elif options[53]==state:
             return True
         len(message)
         return False
 
 
-def comm(client,mess):
+def formatOptionData(optionNumber,data):
+    if optionNumber==54 or optionNumber==1:
+        ipAddress=""
+        ipAddress+=str(data[0])+"."+str(data[1])+"."+str(data[2])+"."+str(data[3])
+        return  ipAddress
+    if optionNumber==6:
+        return  data.decode('utf-8')
+    return int.from_bytes(data,"big")
+
+
+def unpack(message):
+    dict={}
+    index=240
+    while index<len(message)-1:
+        optionNumber=message[index]
+        optionLength=message[index+1]
+        optionData=message[index+2:index+optionLength+2]
+        index=index+optionLength+2
+        dict[optionNumber]=formatOptionData(optionNumber,optionData)
+
+    return dict
+
+
+
+
+def comm(client,mess,widget):
     logger = Logger()
     UDP_PORT_TO_TRANSMIT = 67
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
     bufferSize = 1024
-    sock.bind((client.IP_ADDRESS, client.UDP_PORT))
+    sock.bind((client.ipToString(), client.UDP_PORT))
 
 
     while (Client_States_Dictionary[client.STATE] != "closed"):
@@ -118,6 +167,8 @@ def comm(client,mess):
             logger.writeInfo("Comunication started")
             logger.writeInfo("am starea " + str(client.STATE))
             print("am trimis discover")
+            # widget.insert(tk.INSERT,"am trimis discover")
+            # widget.update_idletasks()
             sock.sendto(mess.message, ('<broadcast>', UDP_PORT_TO_TRANSMIT))
             # logger.writeInfo("am trimis mesajul de tipul " + str(Messages_dictionary[client.STATE]))
             client.STATE = 2
@@ -125,9 +176,14 @@ def comm(client,mess):
         elif client.STATE == 2:
             print("asteptam")
             response = sock.recvfrom(bufferSize)
-            print(Message.check_message(response[0],client.STATE))
-            if Message.check_message(response[0],client.STATE) is True:
+            # print(Message.check_message(response[0],client.STATE))
+            serverOptions=unpack(response[0])
+            if Message.check_message(response[0],client.STATE,serverOptions) is True:
                 print("am primit mesajul de tipul " + str(client.STATE))
+                if 54 in serverOptions:
+                    client.serverIP=serverOptions[54]
+                    if client.serverIP in client.previousIPDictionary:
+                       client.IP_ADDRESS_TO_REQUEST=client.previousIPDictionary[client.serverIP]
                 client.STATE = 3
 
         elif client.STATE == 3:
@@ -142,16 +198,16 @@ def comm(client,mess):
             logger.writeInfo("am starea "+str(client.STATE))
             print("sunt in starea " + str(client.STATE))
             response = sock.recvfrom(bufferSize)
-            if Message.check_message(response[0],client.STATE) is True:
+            serverOptions = unpack(response[0])
+            if Message.check_message(response[0],client.STATE,serverOptions) is True:
                 print("am primit mesajul de tipul " + str(client.STATE))
-            client.STATE = 7
+                client.updateInfo(serverOptions,response[0])
+                print("ip address "+str(client.IP_ADDRESS))
+                print(client.mask)
+            client.STATE=5
 
         elif client.STATE == 5:
-            logger.writeInfo("am starea " + str(client.STATE))
-            # client.STATE = 6
-        elif client.STATE == 6:
-            logger.writeInfo("am starea " + str(client.STATE))
-            # client.STATE = 7
+            logger.writeInfo("set up complete waiting for user to release and close " )
         elif client.STATE == 7:
             logger.writeInfo("am starea " + str(client.STATE))
     logger.writeInfo("Comunicatie terminata")
