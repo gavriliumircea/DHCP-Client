@@ -51,6 +51,14 @@ class Application(tk.Frame):
         self.chk8.pack()
         self.chk9.pack()
 
+        self.releaseButton=tk.Button(text="Release Ip address",command=self.release)
+        self.releaseButton.pack()
+        self.text=tk.Text()
+        self.text.pack()
+
+    def release(self):
+        self.client.STATE=7
+
     def destroy(self):
         # oprire comunicatie
         print("seek and destroy")
@@ -61,7 +69,7 @@ class Application(tk.Frame):
     def optionBuilder(self):
         options = bytearray()
         if (self.var2.get()):
-            options += bytearray([50, 4, 192, 14, 0, 3])
+            options += bytearray([50, 4, self.client.IP_ADDRESS_TO_REQUEST[0], self.client.IP_ADDRESS_TO_REQUEST[1], self.client.IP_ADDRESS_TO_REQUEST[2], self.client.IP_ADDRESS_TO_REQUEST[3]])
         if (self.var3.get()):
             options += bytearray([51, 4, 0, 0, 0x07, 0x08])
             # options+='0x00'
@@ -91,11 +99,14 @@ class Application(tk.Frame):
             self.destroy()
         self.mess = Message(1, self.optionBuilder())
         try:
-            thread = threading.Thread(target=comm, args=(self.client, self.mess))
+            thread = threading.Thread(target=comm, args=(self.client, self.mess,self.text))
+            # thread2 = threading.Thread(target=self.release)
             thread.start()
+            # thread2.start()
             thread.join()
         except:
             Logger().writeError("Eroare thread")
+        # comm(self.client,self.mess)
         self.destroy()
 
 
