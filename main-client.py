@@ -225,7 +225,7 @@ def comm(client,mess,widget):
                 print("am primit mesajul de tipul nack")
                 widget.insert(tk.INSERT, "\nam primit mesajul de tipul nack")
                 widget.update_idletasks()
-                client.STATE=3
+                client.STATE=1
         elif client.STATE == 5:
 
             logger.writeInfo("set up complete waiting for user to release and close " )
